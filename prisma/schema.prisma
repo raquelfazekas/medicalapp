@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  role      String   // "medico" ou "atendente"
+  createdAt DateTime @default(now())
+}
+
+model Paciente {
+  id              String   @id @default(cuid())
+  nomeCompleto    String
+  nomeSocial      String?
+  dataNascimento  DateTime
+  cpf             String   @unique
+  genero          String
+  estadoCivil     String
+  numeroFilhos    Int
+  profissao       String
+  escolaridade    String
+  naturalidade    String
+  religiao        String
+  email           String?
+  telefone        String?
+  endereco        String
+  createdAt       DateTime @default(now())
+
+  Documento       Documento[]
+  Fila            Fila[]
+  Receita         Receita[]
+}
+
+
+model Fila {
+  id          String   @id @default(cuid())
+  pacienteId  String
+  paciente    Paciente @relation(fields: [pacienteId], references: [id])
+  status      String   // "aguardando", "em atendimento", etc.
+  createdAt   DateTime @default(now())
+}
+
+model Documento {
+  id          String   @id @default(cuid())
+  pacienteId  String
+  paciente    Paciente @relation(fields: [pacienteId], references: [id])
+  conteudo    String   // Armazenamos como JSON ou HTML do Tiptap
+  createdAt   DateTime @default(now())
+}
+
+model Receita {
+  id          String   @id @default(cuid())
+  pacienteId  String
+  paciente    Paciente @relation(fields: [pacienteId], references: [id])
+  prescricao  String
+  createdAt   DateTime @default(now())
+}
