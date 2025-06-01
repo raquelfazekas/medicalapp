@@ -45,15 +45,12 @@ model Fila {
   createdAt  DateTime @default(now())
 }
 
-enum TipoDocumento {
-  RL
-  PR
-}
+
 
 model Documento {
   id           String   @id @default(cuid())
   pacienteId   String
-  typeDoc      TipoDocumento   
+  typeDoc      String   
   type         String
   title        String
   paciente     Paciente @relation(fields: [pacienteId], references: [id])
