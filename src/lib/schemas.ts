@@ -1,5 +1,5 @@
 // Schema de validação com Zod
-import { isValidCPF } from '@/components/formatInput/validacao';
+import { isValidCPF } from '@/lib/formatters';
 import z from 'zod'
 
 export const patientSchema = z.object({

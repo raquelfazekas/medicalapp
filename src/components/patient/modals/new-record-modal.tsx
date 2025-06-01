@@ -1,0 +1,136 @@
+"use client";
+
+import type React from "react";
+
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Tiptap from "@/components/rich-text-editor";
+import { createDocumento } from "@/actions/prescricaoActions";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
+
+interface NewRecordModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [reportType, setReportType] = useState("");
+  const [reportDate, setReportDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const params = useParams();
+  const pacienteId = params?.id;
+  const typeDoc = "PR";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await createDocumento(
+        title,
+        content,
+        reportType,
+        typeDoc,
+        reportDate,
+        pacienteId as string
+      );
+
+      toast.success("Relatório criado com sucesso!");
+
+      onOpenChange(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao criar relatório. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Criar Novo Prontuário</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="type">Tipo de Consulta</Label>
+              <Select value={reportType} onValueChange={setReportType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rotina">Consulta de Rotina</SelectItem>
+                  <SelectItem value="especializada">
+                    Consulta Especializada
+                  </SelectItem>
+                  <SelectItem value="retorno">Retorno</SelectItem>
+                  <SelectItem value="urgencia">Urgência</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="date">Data da Consulta</Label>
+              <Input
+                id="report-date"
+                type="date"
+                value={reportDate}
+                onChange={(e) => setReportDate(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="chief-complaint">Queixa Principal</Label>
+            <Input
+              id="title"
+              placeholder="Descreva a queixa principal do paciente"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div>
+            <Tiptap onUpdate={setContent} />
+          </div>
+
+          <div className="flex justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Salvando..." : "Salvar Prontuário"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

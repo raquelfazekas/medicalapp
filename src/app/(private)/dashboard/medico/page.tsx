@@ -1,4 +1,3 @@
-
 import {
   Bell,
   Calendar,
@@ -44,6 +43,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { UserButton } from "@clerk/nextjs";
 
 // Dados mockados
 const statsData = [
@@ -133,22 +133,22 @@ const navigationItems = [
   {
     title: "Consultas",
     icon: Calendar,
-    url: "/consultas",
+    url: "/dashboard/consultas",
   },
   {
     title: "Médicos",
     icon: Stethoscope,
-    url: "/medicos",
+    url: "/dashboard/medicos",
   },
   {
     title: "Relatórios",
     icon: ClipboardList,
-    url: "/relatorios",
+    url: "/dashboard/relatorios",
   },
   {
     title: "Configurações",
     icon: Settings,
-    url: "/configuracoes",
+    url: "/dashboard/configuracoes",
   },
 ];
 
@@ -217,6 +217,7 @@ export default function Dashboard() {
                 3
               </Badge>
             </Button>
+            <UserButton />
 
             <DropdownMenu>
               <DropdownMenuContent className="w-56" align="end" forceMount>
