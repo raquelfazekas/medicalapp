@@ -57,3 +57,12 @@ export function calcularIdade(dataNascimento: Date | string): number {
 
   return idade;
 }
+
+  export const formatDate = (dateString: Date) => {
+    return new Date(dateString).toLocaleDateString("pt-BR");
+  };
+
+  export const formatDateString = (dateString: string) => {
+  const [year, month, day] = dateString.split("-");
+  return `${day}/${month}/${year}`;
+};

@@ -31,6 +31,9 @@ export function NewDocumentModal({
 }: NewDocumentModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [observations, setObservations] = useState("");
+  const [dataEmissao, setDataEmissao] = useState(
+    () => new Date().toISOString().split("T")[0]
+  );
 
   const getDocumentTitle = () => {
     switch (documentType) {
@@ -74,7 +77,7 @@ export function NewDocumentModal({
       text: observations,
       pacitente,
       endereco: pacitente.endereco,
-      dataEmissao: new Date().toISOString().split("T")[0],
+      dataEmissao: dataEmissao,
     };
 
     switch (documentType) {
@@ -134,7 +137,8 @@ export function NewDocumentModal({
             <Input
               id="document-date"
               type="date"
-              defaultValue={new Date().toISOString().split("T")[0]}
+              value={dataEmissao}
+              onChange={(e) => setDataEmissao(e.target.value)}
             />
           </div>
 

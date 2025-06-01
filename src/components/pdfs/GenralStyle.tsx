@@ -11,10 +11,10 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { styles } from "./style";
-import { calcularIdade } from "@/lib/formatters";
+import { calcularIdade, formatDateString } from "@/lib/formatters";
 import { Paciente } from "@prisma/client";
 
-const MyDocument = ({ paciente, text, type }: PDF1Props) => (
+const MyDocument = ({ paciente, text, type, dataEmissao }: PDF1Props) => (
   <Document author="Victor Fazekas">
     <Page size="A4" style={styles.page}>
       {/* Logo */}
@@ -33,7 +33,8 @@ const MyDocument = ({ paciente, text, type }: PDF1Props) => (
             - Centro, Taubaté - SP
           </Text>
           <Text style={{ marginBottom: 6 }}>
-            <Text style={styles.label}>Data de emissão:</Text> 31/05/2025
+            <Text style={styles.label}>Data de emissão:</Text>{" "}
+            {formatDateString(dataEmissao)}
           </Text>
         </View>
         <View style={[styles.row, { marginTop: 6 }]}>
@@ -52,7 +53,8 @@ const MyDocument = ({ paciente, text, type }: PDF1Props) => (
           <Text style={styles.label}>Paciente:</Text> {paciente.nomeCompleto}
         </Text>
         <Text>
-          <Text style={styles.label}>Idade:</Text> {calcularIdade(paciente.dataNascimento)}
+          <Text style={styles.label}>Idade:</Text>{" "}
+          {calcularIdade(paciente.dataNascimento)}
         </Text>
       </View>
       <View style={styles.box}>
@@ -63,20 +65,14 @@ const MyDocument = ({ paciente, text, type }: PDF1Props) => (
 );
 
 interface PDF1Props {
-  paciente: Paciente
+  paciente: Paciente;
   endereco: string;
   dataEmissao: string;
   text: string;
   type: string;
 }
 
-function PDF1({
-  paciente,
-  endereco,
-  dataEmissao,
-  text,
-  type,
-}: PDF1Props) {
+function PDF1({ paciente, endereco, dataEmissao, text, type }: PDF1Props) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {

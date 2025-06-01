@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { calcularIdade } from "@/lib/formatters";
+import { calcularIdade, formatDate } from "@/lib/formatters";
 import { PatientPageProps } from "@/types/patientTypes";
 import { CalendarDays, User, FileText, Phone, Mail } from "lucide-react";
 
@@ -10,9 +10,6 @@ type PatientHeaderProps = {
 };
 
 export function PatientHeader({ patient }: PatientHeaderProps) {
-  const formatDate = (dateString: Date) => {
-    return new Date(dateString).toLocaleDateString("pt-BR");
-  };
 
   return (
     <Card className="mb-8 shadow-sm border-slate-200">
