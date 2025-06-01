@@ -5,12 +5,13 @@ import { Breadcrumbs } from "@/components/ui/breadcrumb";
 import { GetPaciente } from "@/actions/pacienteActions";
 import { GetDocumentos, GetDocumentosPR } from "@/actions/prescricaoActions";
 
-export default async function PatientProfilePage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const { id } = params;
+// Define the PageProps type explicitly (optional, but clearer)
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function PatientProfilePage({ params }: PageProps) {
+  const { id } = await params; // Unwrap the Promise
 
   const [patient, documentos, relatorios] = await Promise.all([
     GetPaciente(id),
