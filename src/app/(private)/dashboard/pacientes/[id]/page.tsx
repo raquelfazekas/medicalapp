@@ -10,7 +10,8 @@ export default async function PatientProfilePage({
 }: {
   params: { id: string };
 }) {
-  const { id } = await params; // Desestrutura depois.
+  const { id } = params;
+
   const [patient, documentos, relatorios] = await Promise.all([
     GetPaciente(id),
     GetDocumentos(id),
