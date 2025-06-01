@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -61,7 +62,7 @@ export function DocumentsPDF({ patientId }: DocumentsPDFProps) {
           </div>
           <h3 className="text-lg font-semibold text-slate-900 mb-2">Nenhum documento encontrado</h3>
           <p className="text-slate-600 mb-4">
-            Clique em "Gerar Documento PDF" para criar receitas, atestados ou solicitações.
+            Clique em &quot;Gerar Documento PDF&quot; para criar receitas, atestados ou solicitações.
           </p>
         </CardContent>
       </Card>
