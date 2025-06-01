@@ -16,8 +16,8 @@ interface MedicalReportsProps {
 }
 
 export function MedicalReports({ documentos }: MedicalReportsProps) {
-  const formatDate = (dateString: Date) => {
-    return new Date(dateString).toLocaleDateString("pt-BR");
+  const formatDate = (date: Date) => {
+    return date.toISOString().split("T")[0].split("-").reverse().join("/");
   };
 
   const getStatusColor = (status: string) => {

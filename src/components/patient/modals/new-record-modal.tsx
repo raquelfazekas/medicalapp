@@ -83,12 +83,9 @@ export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="rotina">Consulta de Rotina</SelectItem>
-                  <SelectItem value="especializada">
-                    Consulta Especializada
-                  </SelectItem>
-                  <SelectItem value="retorno">Retorno</SelectItem>
-                  <SelectItem value="urgencia">Urgência</SelectItem>
+                  <SelectItem value="Primeira consulta">Primeira consulta</SelectItem>
+                  <SelectItem value="Retorno">Retorno</SelectItem>
+                  <SelectItem value="Urgência">Urgência</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -9,13 +9,14 @@ import { DocumentsPDF } from "./documents-pdf";
 import { PatientHistory } from "./patient-history";
 import { FileText, ClipboardList, FileDown, History } from "lucide-react";
 import { Documento } from "@/types/documentTypes";
-import { Paciente } from "@prisma/client";
+import { Paciente, Receita } from "@prisma/client";
 
 interface PatientTabsProps {
   patientId: string;
   documentos: Documento[];
   relatorios: Documento[];
-  pacitente: Paciente
+  pacitente: Paciente;
+  receitas: Receita[];
 }
 
 export function PatientTabs({
@@ -23,6 +24,7 @@ export function PatientTabs({
   patientId,
   documentos,
   pacitente,
+  receitas,
 }: PatientTabsProps) {
   const [activeTab, setActiveTab] = useState("prontuarios");
 
@@ -73,11 +75,16 @@ export function PatientTabs({
         </TabsContent>
 
         <TabsContent value="documentos" className="mt-6">
-          <DocumentsPDF patientId={patientId} />
+          <DocumentsPDF receitas={receitas} patientId={patientId} />
         </TabsContent>
 
         <TabsContent value="historico" className="mt-6">
-          <PatientHistory patientId={patientId} />
+          <PatientHistory
+            patientId={patientId}
+            documentos={documentos}
+            relatorios={relatorios}
+            receitas={receitas}
+          />
         </TabsContent>
       </Tabs>
     </div>

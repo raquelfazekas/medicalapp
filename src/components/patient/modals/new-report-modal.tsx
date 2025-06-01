@@ -40,7 +40,7 @@ export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
 
   const params = useParams();
   const pacienteId = params?.id;
-  const typeDoc = "RL"
+  const typeDoc = "RL";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,11 +54,10 @@ export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
         typeDoc,
         reportDate,
         pacienteId as string
-        
       );
 
       toast.success("Relatório criado com sucesso!");
-      
+
       onOpenChange(false);
     } catch (error) {
       console.error(error);
@@ -84,17 +83,10 @@ export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cardiologico">
-                    Relatório Cardiológico
+                  <SelectItem value="Relatório Médico">
+                    Relatório Médico
                   </SelectItem>
-                  <SelectItem value="laboratorial">
-                    Relatório Laboratorial
-                  </SelectItem>
-                  <SelectItem value="radiologico">
-                    Relatório Radiológico
-                  </SelectItem>
-                  <SelectItem value="cirurgico">Relatório Cirúrgico</SelectItem>
-                  <SelectItem value="psicologico">
+                  <SelectItem value="Relatório Psicológico">
                     Relatório Psicológico
                   </SelectItem>
                 </SelectContent>
@@ -116,7 +108,7 @@ export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
             <Label htmlFor="title">Título do Relatório</Label>
             <Input
               id="title"
-              placeholder="Ex: Avaliação Cardiológica Completa"
+              placeholder="Ex: Avaliação Médica Completa"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />

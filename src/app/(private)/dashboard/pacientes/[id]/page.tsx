@@ -4,6 +4,7 @@ import { PatientTabs } from "@/components/patient/patient-tabs";
 import { Breadcrumbs } from "@/components/ui/breadcrumb";
 import { GetPaciente } from "@/actions/pacienteActions";
 import { GetDocumentos, GetDocumentosPR } from "@/actions/prescricaoActions";
+import { GetPdfRecords } from "@/actions/domentoActions";
 
 // Define the PageProps type explicitly (optional, but clearer)
 interface PageProps {
@@ -13,10 +14,11 @@ interface PageProps {
 export default async function PatientProfilePage({ params }: PageProps) {
   const { id } = await params; // Unwrap the Promise
 
-  const [patient, documentos, relatorios] = await Promise.all([
+  const [patient, documentos, relatorios, receitas] = await Promise.all([
     GetPaciente(id),
     GetDocumentos(id),
     GetDocumentosPR(id),
+    GetPdfRecords(id)
   ]);
 
   return (
@@ -34,6 +36,7 @@ export default async function PatientProfilePage({ params }: PageProps) {
 
         <Suspense fallback={<div>Carregando...</div>}>
           <PatientTabs
+            receitas={receitas}
             pacitente={patient}
             relatorios={relatorios}
             documentos={documentos}

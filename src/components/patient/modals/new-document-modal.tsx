@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import PDF1 from "@/components/pdfs/GenralStyle";
 import PDF2 from "@/components/pdfs/ReceitaEspecial";
 import { Paciente } from "@prisma/client";
+import { createPdfRecord } from "@/actions/domentoActions";
 
 interface NewDocumentModalProps {
   open: boolean;
@@ -30,7 +31,7 @@ export function NewDocumentModal({
   pacitente,
 }: NewDocumentModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [observations, setObservations] = useState("");
+  const [prescription, setprescription] = useState("");
   const [dataEmissao, setDataEmissao] = useState(
     () => new Date().toISOString().split("T")[0]
   );
@@ -68,13 +69,20 @@ export function NewDocumentModal({
     e.preventDefault();
     setIsLoading(true);
 
+    await createPdfRecord(
+      prescription,
+      getPdfTitle(),
+      new Date(dataEmissao),
+      pacitente.id
+    );
+
     setIsLoading(false);
     onOpenChange(false);
   };
 
   const renderFormFields = () => {
     const pdfProps = {
-      text: observations,
+      text: prescription,
       pacitente,
       endereco: pacitente.endereco,
       dataEmissao: dataEmissao,
@@ -85,13 +93,13 @@ export function NewDocumentModal({
         return (
           <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="observations">Observações</Label>
+              <Label htmlFor="prescription">Observações</Label>
               <Textarea
-                id="observations"
+                id="prescription"
                 placeholder="Observações adicionais..."
                 rows={2}
-                value={observations}
-                onChange={(e) => setObservations(e.target.value)}
+                value={prescription}
+                onChange={(e) => setprescription(e.target.value)}
               />
             </div>
 
@@ -105,13 +113,13 @@ export function NewDocumentModal({
         return (
           <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="observations">Observações</Label>
+              <Label htmlFor="prescription">Observações</Label>
               <Textarea
-                id="observations"
+                id="prescription"
                 placeholder="Observações adicionais..."
                 rows={2}
-                value={observations}
-                onChange={(e) => setObservations(e.target.value)}
+                value={prescription}
+                onChange={(e) => setprescription(e.target.value)}
               />
             </div>
 

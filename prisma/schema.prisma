@@ -63,6 +63,7 @@ model Receita {
   id         String   @id @default(cuid())
   pacienteId String
   paciente   Paciente @relation(fields: [pacienteId], references: [id])
+  type       String
   prescricao String
   createdAt  DateTime @default(now())
 }
