@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 
@@ -14,7 +15,7 @@ import { styles } from "./style";
 import { Paciente } from "@prisma/client";
 import { formatDateString } from "@/lib/formatters";
 
-const MyDocument = ({ paciente, dataEmissao, text }: PDF1Props) => (
+const MyDocument = ({ paciente, dataEmissao, text, type }: PDF1Props) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {/* Logo */}
@@ -124,9 +125,16 @@ interface PDF1Props {
   endereco: string;
   dataEmissao: string;
   text: string;
+  type: string;
 }
 
-function ReceitaEspecial({ paciente, endereco, dataEmissao, text }: PDF1Props) {
+function ReceitaEspecial({
+  paciente,
+  endereco,
+  dataEmissao,
+  text,
+  type,
+}: PDF1Props) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -142,6 +150,7 @@ function ReceitaEspecial({ paciente, endereco, dataEmissao, text }: PDF1Props) {
             paciente={paciente}
             endereco={endereco}
             dataEmissao={dataEmissao}
+            type={type}
           />
         </PDFViewer>
       ) : (
