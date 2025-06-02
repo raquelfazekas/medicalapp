@@ -11,7 +11,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { styles } from "./style";
-import { calcularIdade, formatDateString } from "@/lib/formatters";
+import { calcularIdade, formatDate } from "@/lib/formatters";
 import { Paciente } from "@prisma/client";
 
 const MyDocument = ({ paciente, text, type, dataEmissao }: PDF1Props) => (
@@ -34,7 +34,7 @@ const MyDocument = ({ paciente, text, type, dataEmissao }: PDF1Props) => (
           </Text>
           <Text style={{ marginBottom: 6 }}>
             <Text style={styles.label}>Data de emissão:</Text>{" "}
-            {formatDateString(dataEmissao)}
+            {formatDate(dataEmissao)}
           </Text>
         </View>
         <View style={[styles.row, { marginTop: 6 }]}>
@@ -72,7 +72,13 @@ interface PDF1Props {
   type: string;
 }
 
-function PDF1({ paciente, endereco, dataEmissao, text, type }: PDF1Props) {
+function GenralStyle({
+  paciente,
+  endereco,
+  dataEmissao,
+  text,
+  type,
+}: PDF1Props) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -98,4 +104,4 @@ function PDF1({ paciente, endereco, dataEmissao, text, type }: PDF1Props) {
   );
 }
 
-export default PDF1;
+export default GenralStyle;

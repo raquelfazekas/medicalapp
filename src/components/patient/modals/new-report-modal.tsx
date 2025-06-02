@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,16 +20,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Tiptap from "@/components/rich-text-editor";
-import { createDocumento } from "@/actions/prescricaoActions";
+import { createDocumento, updateDocumento } from "@/actions/prescricaoActions";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import { Documento } from "@/types/documentTypes";
 
 interface NewReportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  mode: "create" | "edit";
+  initialData?: Documento | null;
 }
 
-export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
+export function NewReportModal({
+  open,
+  onOpenChange,
+  mode,
+  initialData,
+}: NewReportModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [reportType, setReportType] = useState("");
   const [reportDate, setReportDate] = useState(
@@ -42,26 +50,52 @@ export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
   const pacienteId = params?.id;
   const typeDoc = "RL";
 
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setReportType(initialData.type);
+      setReportDate(initialData.dataConsulta.toISOString().split("T")[0]);
+      setTitle(initialData.title);
+      setContent(initialData.conteudo || "");
+    } else {
+      // Reset para criação
+      setReportType("");
+      setReportDate(new Date().toISOString().split("T")[0]);
+      setTitle("");
+      setContent("");
+    }
+  }, [mode, initialData, open]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await createDocumento(
-        title,
-        content,
-        reportType,
-        typeDoc,
-        reportDate,
-        pacienteId as string
-      );
-
-      toast.success("Relatório criado com sucesso!");
+      if (mode === "create") {
+        await createDocumento(
+          title,
+          content,
+          reportType,
+          typeDoc,
+          reportDate,
+          pacienteId as string
+        );
+        toast.success("Relatório criado com sucesso!");
+      } else if (mode === "edit" && initialData) {
+        await updateDocumento(
+          initialData.id,
+          title,
+          content,
+          reportType,
+          typeDoc,
+          reportDate
+        );
+        toast.success("Relatório atualizado com sucesso!");
+      }
 
       onOpenChange(false);
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao criar relatório. Tente novamente.");
+      toast.error("Erro ao salvar relatório. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -114,7 +148,7 @@ export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
             />
           </div>
           <div>
-            <Tiptap onUpdate={setContent} />
+            <Tiptap content={content} onUpdate={setContent} />
           </div>
 
           <div className="flex justify-end gap-3">
@@ -126,7 +160,11 @@ export function NewReportModal({ open, onOpenChange }: NewReportModalProps) {
               Cancelar
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Salvando..." : "Salvar Relatório"}
+              {isLoading
+                ? "Salvando..."
+                : mode === "create"
+                ? "Salvar Prontuário"
+                : "Atualizar Prontuário"}
             </Button>
           </div>
         </form>

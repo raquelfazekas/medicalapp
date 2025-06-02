@@ -39,3 +39,19 @@ export async function GetPdfRecords(pacienteId: string) {
         throw new Error(error.message || "Erro ao Buscar documento");
     }
 }
+
+
+export async function DeleteReceita(id: string) {
+
+    try {
+        await prisma.receita.delete({
+            where: { id }
+        })
+        revalidatePath(`/dashboard/pacientes/${id}`);
+        return
+    } catch (error: any) {
+        console.error("Erro ao deletar Receita:", error);
+        throw new Error(error.message || "Erro ao deletar Receita");
+    }
+
+}

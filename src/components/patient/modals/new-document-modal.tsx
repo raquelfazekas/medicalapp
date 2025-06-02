@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import PDF1 from "@/components/pdfs/GenralStyle";
-import PDF2 from "@/components/pdfs/ReceitaEspecial";
+import GenralStyle from "@/components/pdfs/GenralStyle";
+import ReceitaEspecial from "@/components/pdfs/ReceitaEspecial";
 import { Paciente } from "@prisma/client";
 import { createPdfRecord } from "@/actions/domentoActions";
 
@@ -103,7 +103,7 @@ export function NewDocumentModal({
               />
             </div>
 
-            <PDF2 paciente={pacitente} {...pdfProps} />
+            <ReceitaEspecial paciente={pacitente} {...pdfProps} />
           </div>
         );
 
@@ -123,7 +123,7 @@ export function NewDocumentModal({
               />
             </div>
 
-            <PDF1 paciente={pacitente} type={getPdfTitle()} {...pdfProps} />
+            <GenralStyle paciente={pacitente} type={getPdfTitle()} {...pdfProps} />
           </div>
         );
 

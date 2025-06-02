@@ -126,7 +126,7 @@ interface PDF1Props {
   text: string;
 }
 
-function PDF2({ paciente, endereco, dataEmissao, text }: PDF1Props) {
+function ReceitaEspecial({ paciente, endereco, dataEmissao, text }: PDF1Props) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -151,4 +151,4 @@ function PDF2({ paciente, endereco, dataEmissao, text }: PDF1Props) {
   );
 }
 
-export default PDF2;
+export default ReceitaEspecial;

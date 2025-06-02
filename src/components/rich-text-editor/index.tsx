@@ -8,9 +8,10 @@ import Highlight from "@tiptap/extension-highlight";
 
 interface TiptapProps {
   onUpdate?: (content: string) => void;
+  content: string
 }
 
-const Tiptap = ({ onUpdate }: TiptapProps) => {
+const Tiptap = ({ onUpdate, content }: TiptapProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -30,7 +31,7 @@ const Tiptap = ({ onUpdate }: TiptapProps) => {
       }),
       Highlight,
     ],
-    content: "",
+    content: content,
     editorProps: {
       attributes: {
         class: "min-h-[156px] border rounded-md bg-slate-50 py-2 px-3",

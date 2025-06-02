@@ -58,3 +58,50 @@ export async function GetDocumentosPR(pacienteId: string) {
         throw new Error(error.message || "Erro ao Buscar documento");
     }
 }
+
+export async function updateDocumento(
+    documentoId: string,
+    title: string,
+    content: string,
+    reportType: string,
+    typeDoc: string,
+    reportDate: string
+) {
+    try {
+        const documento = await prisma.documento.update({
+            where: {
+                id: documentoId,
+            },
+            data: {
+                title: title,
+                conteudo: content,
+                type: reportType,
+                typeDoc: typeDoc,
+                dataConsulta: new Date(reportDate),
+            },
+        });
+
+        revalidatePath(`/dashboard/documentos/${documentoId}`);
+
+        return documento;
+    } catch (error: any) {
+        console.error("Erro ao atualizar documento:", error);
+        throw new Error(error.message || "Erro ao atualizar documento");
+    }
+}
+
+
+export async function DeleteDocument(id: string) {
+
+    try {
+        await prisma.documento.delete({
+            where: { id }
+        })
+        revalidatePath(`/dashboard/pacientes/${id}`);
+        return
+    } catch (error: any) {
+        console.error("Erro ao deletar documento:", error);
+        throw new Error(error.message || "Erro ao deletar documento");
+    }
+
+}

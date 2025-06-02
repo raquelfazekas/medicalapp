@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { NewRecordModal } from "./modals/new-record-modal";
+import { NewOrEditRecordModal } from "./modals/new-record-modal";
 import { NewReportModal } from "./modals/new-report-modal";
 import { NewDocumentModal } from "./modals/new-document-modal";
 import { Paciente } from "@prisma/client";
@@ -94,11 +94,13 @@ export function QuickActions({ pacitente }: PatientTabsProps) {
       </Card>
 
       {/* Modais */}
-      <NewRecordModal
+      <NewOrEditRecordModal
+        mode="create"
         open={showRecordModal}
         onOpenChange={setShowRecordModal}
       />
       <NewReportModal
+        mode="create"
         open={showReportModal}
         onOpenChange={setShowReportModal}
       />

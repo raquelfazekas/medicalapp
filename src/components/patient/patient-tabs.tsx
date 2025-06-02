@@ -75,7 +75,7 @@ export function PatientTabs({
         </TabsContent>
 
         <TabsContent value="documentos" className="mt-6">
-          <DocumentsPDF receitas={receitas} patientId={patientId} />
+          <DocumentsPDF paciente={pacitente} receitas={receitas} patientId={patientId} />
         </TabsContent>
 
         <TabsContent value="historico" className="mt-6">

@@ -1,8 +1,7 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,16 +19,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Tiptap from "@/components/rich-text-editor";
-import { createDocumento } from "@/actions/prescricaoActions";
+import { createDocumento, updateDocumento } from "@/actions/prescricaoActions";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import { Documento } from "@/types/documentTypes";
 
-interface NewRecordModalProps {
+interface NewOrEditRecordModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  mode: "create" | "edit";
+  initialData?: Documento | null;
 }
 
-export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
+export function NewOrEditRecordModal({
+  open,
+  onOpenChange,
+  mode,
+  initialData,
+}: NewOrEditRecordModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [reportType, setReportType] = useState("");
   const [reportDate, setReportDate] = useState(
@@ -42,26 +49,52 @@ export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
   const pacienteId = params?.id;
   const typeDoc = "PR";
 
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setReportType(initialData.type);
+      setReportDate(initialData.dataConsulta.toISOString().split("T")[0]);
+      setTitle(initialData.title);
+      setContent(initialData.conteudo || "");
+    } else {
+      // Reset para criação
+      setReportType("");
+      setReportDate(new Date().toISOString().split("T")[0]);
+      setTitle("");
+      setContent("");
+    }
+  }, [mode, initialData, open]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await createDocumento(
-        title,
-        content,
-        reportType,
-        typeDoc,
-        reportDate,
-        pacienteId as string
-      );
-
-      toast.success("Relatório criado com sucesso!");
+      if (mode === "create") {
+        await createDocumento(
+          title,
+          content,
+          reportType,
+          typeDoc,
+          reportDate,
+          pacienteId as string
+        );
+        toast.success("Prontuário criado com sucesso!");
+      } else if (mode === "edit" && initialData) {
+         await updateDocumento(
+          initialData.id,
+          title,
+          content,
+          reportType,
+          typeDoc,
+          reportDate
+        );
+        toast.success("Prontuário atualizado com sucesso!");
+      }
 
       onOpenChange(false);
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao criar relatório. Tente novamente.");
+      toast.error("Erro ao salvar Prontuário. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +104,9 @@ export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Criar Novo Prontuário</DialogTitle>
+          <DialogTitle>
+            {mode === "create" ? "Criar Novo Prontuário" : "Editar Prontuário"}
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -83,7 +118,9 @@ export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Primeira consulta">Primeira consulta</SelectItem>
+                  <SelectItem value="Primeira consulta">
+                    Primeira consulta
+                  </SelectItem>
                   <SelectItem value="Retorno">Retorno</SelectItem>
                   <SelectItem value="Urgência">Urgência</SelectItem>
                 </SelectContent>
@@ -111,7 +148,7 @@ export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
             />
           </div>
           <div>
-            <Tiptap onUpdate={setContent} />
+            <Tiptap content={content} onUpdate={setContent} />
           </div>
 
           <div className="flex justify-end gap-3">
@@ -123,7 +160,11 @@ export function NewRecordModal({ open, onOpenChange }: NewRecordModalProps) {
               Cancelar
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Salvando..." : "Salvar Prontuário"}
+              {isLoading
+                ? "Salvando..."
+                : mode === "create"
+                ? "Salvar Prontuário"
+                : "Atualizar Prontuário"}
             </Button>
           </div>
         </form>

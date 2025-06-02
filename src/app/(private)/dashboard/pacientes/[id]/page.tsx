@@ -6,13 +6,12 @@ import { GetPaciente } from "@/actions/pacienteActions";
 import { GetDocumentos, GetDocumentosPR } from "@/actions/prescricaoActions";
 import { GetPdfRecords } from "@/actions/domentoActions";
 
-// Define the PageProps type explicitly (optional, but clearer)
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function PatientProfilePage({ params }: PageProps) {
-  const { id } = await params; // Unwrap the Promise
+  const { id } = await params;
 
   const [patient, documentos, relatorios, receitas] = await Promise.all([
     GetPaciente(id),

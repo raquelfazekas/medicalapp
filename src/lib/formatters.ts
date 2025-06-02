@@ -45,9 +45,9 @@ export const isValidCPF = (cpf: string) => {
 export function calcularIdade(dataNascimento: Date | string): number {
   const hoje = new Date();
   const nascimento = new Date(dataNascimento);
-  
+
   let idade = hoje.getFullYear() - nascimento.getFullYear();
-  
+
   const mes = hoje.getMonth() - nascimento.getMonth();
   const dia = hoje.getDate() - nascimento.getDate();
 
@@ -58,11 +58,12 @@ export function calcularIdade(dataNascimento: Date | string): number {
   return idade;
 }
 
-  export const formatDate = (dateString: Date) => {
-    return new Date(dateString).toLocaleDateString("pt-BR");
-  };
-
-  export const formatDateString = (dateString: string) => {
+export const formatDateString = (dateString: string) => {
   const [year, month, day] = dateString.split("-");
   return `${day}/${month}/${year}`;
+};
+
+export const formatDate = (date: string | Date) => {
+  const d = date instanceof Date ? date : new Date(date);
+  return d.toISOString().split("T")[0].split("-").reverse().join("/");
 };
