@@ -1,9 +1,9 @@
-import Tiptap from "@/components/rich-text-editor";
+import React from 'react'
 
-export default function Home() {
+function page() {
   return (
-    <div className="max-w-3xl mx-auto py-8">
-      <Tiptap />
-    </div>
-  );
+    <div>page</div>
+  )
 }
+
+export default page
