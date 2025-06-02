@@ -3,25 +3,29 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Download, Calendar, User, Trash } from "lucide-react";
+import { Edit, Calendar, User, Trash, FileText } from "lucide-react";
 import { Documento } from "@/types/documentTypes";
 import { NewOrEditRecordModal } from "./modals/new-record-modal";
 import { DeleteDocument } from "@/actions/prescricaoActions";
 import { toast } from "sonner";
 import { ConfirmDeleteModal } from "./modals/delete-modal";
 import { formatDate } from "@/lib/formatters";
+import { PDFModalRLPR } from "./modals/RL_PR-modal";
+import { Paciente } from "@prisma/client";
 
 interface MedicalRecordsProps {
   documentos: Documento[];
+  paciente: Paciente;
 }
 
-export function MedicalRecords({ documentos }: MedicalRecordsProps) {
+export function MedicalRecords({ documentos, paciente }: MedicalRecordsProps) {
   const [openModal, setOpenModal] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [selectedRecord, setSelectedRecord] = useState<Documento | null>(null);
-
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState<Documento | null>(null);
+  const [openPDFModal, setOpenPDFModal] = useState(false);
+  const [recordToView, setRecordToView] = useState<Documento | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -52,6 +56,11 @@ export function MedicalRecords({ documentos }: MedicalRecordsProps) {
         setOpenConfirmModal(false);
       }
     }
+  };
+
+  const handleView = (record: Documento) => {
+    setRecordToView(record);
+    setOpenPDFModal(true);
   };
 
   if (documentos.length === 0) {
@@ -89,7 +98,7 @@ export function MedicalRecords({ documentos }: MedicalRecordsProps) {
                       {record.type}
                     </h3>
                     <Badge className={getStatusColor("Finalizado")}>
-                      {"Finalizado"}
+                      Finalizado
                     </Badge>
                   </div>
 
@@ -100,7 +109,7 @@ export function MedicalRecords({ documentos }: MedicalRecordsProps) {
                     </div>
                     <div className="flex items-center gap-1">
                       <User className="h-4 w-4" />
-                      {"Dra. Raquel de Jesus Fazekas"}
+                      Dra. Raquel de Jesus Fazekas
                     </div>
                   </div>
 
@@ -119,10 +128,11 @@ export function MedicalRecords({ documentos }: MedicalRecordsProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center gap-1"
+                    className="flex items-center gap-1 border-green-200 text-green-700 hover:bg-green-50"
+                    onClick={() => handleView(record)}
                   >
-                    <Download className="h-4 w-4" />
-                    PDF
+                    <FileText className="h-4 w-4" />
+                    Visualizar PDF
                   </Button>
                   <Button
                     variant="outline"
@@ -143,12 +153,20 @@ export function MedicalRecords({ documentos }: MedicalRecordsProps) {
         ))}
       </div>
 
+      <PDFModalRLPR
+        open={openPDFModal}
+        onClose={() => setOpenPDFModal(false)}
+        paciente={paciente}
+        documentos={recordToView}
+      />
+
       <NewOrEditRecordModal
         open={openModal}
         onOpenChange={setOpenModal}
         mode={modalMode}
         initialData={selectedRecord}
       />
+
       <ConfirmDeleteModal
         open={openConfirmModal}
         onConfirm={handleDelete}

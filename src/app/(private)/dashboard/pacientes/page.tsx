@@ -34,7 +34,7 @@ export default async function PacientesPage() {
       <div className="mx-auto max-w-7xl space-y-6">
          <Breadcrumbs
                 items={[
-                  { label: "Home", href: "/dashboard/medico" },
+                  { label: "Dashboard", href: "/dashboard/medico" },
                   { label: "Pacientes", href: "/dashboard/pacientes" },
                 ]}
               />

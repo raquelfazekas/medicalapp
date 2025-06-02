@@ -65,6 +65,14 @@ export const styles = StyleSheet.create({
     },
     textQuadro: {
         fontSize: 10
-    }
+    },
+
+    row1: {
+        textAlign: "left"
+    },
+      logo1: {
+        width: 150,
+        height: 120,
+    },
 
 });

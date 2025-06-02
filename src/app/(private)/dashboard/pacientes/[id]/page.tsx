@@ -25,7 +25,7 @@ export default async function PatientProfilePage({ params }: PageProps) {
       <div className="container mx-auto px-4 py-6 max-w-7xl">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "dashboard/medico" },
+            { label: "Dashboard", href: "/dashboard" },
             { label: "Pacientes", href: "/dashboard/pacientes" },
             { label: patient.nomeCompleto, href: `/pacientes/${id}` },
           ]}
