@@ -1,12 +1,9 @@
-import ReportPdf from "@/components/pdfs/ReportPDF";
-import React from "react";
+import React from 'react'
 
 function page() {
   return (
-    <div>
-      <ReportPdf />
-    </div>
-  );
+    <div>page</div>
+  )
 }
 
-export default page;
+export default page
