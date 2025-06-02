@@ -9,6 +9,7 @@ import {
   User,
   ClipboardList,
   Trash,
+  FileText,
 } from "lucide-react";
 import { Documento } from "@/types/documentTypes";
 import { NewReportModal } from "./modals/new-report-modal";
@@ -17,18 +18,22 @@ import { useState } from "react";
 import { DeleteDocument } from "@/actions/prescricaoActions";
 import { toast } from "sonner";
 import { formatDate } from "@/lib/formatters";
+import { PDFModalRLPR } from "./modals/RL_PR-modal";
+import { Paciente } from "@prisma/client";
 
 interface MedicalReportsProps {
   documentos: Documento[];
+  paciente: Paciente;
 }
 
-export function MedicalReports({ documentos }: MedicalReportsProps) {
+export function MedicalReports({ documentos, paciente }: MedicalReportsProps) {
   const [openModal, setOpenModal] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [selectedRecord, setSelectedRecord] = useState<Documento | null>(null);
-
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState<Documento | null>(null);
+  const [openPDFModal, setOpenPDFModal] = useState(false);
+  const [recordToView, setRecordToView] = useState<Documento | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -59,6 +64,11 @@ export function MedicalReports({ documentos }: MedicalReportsProps) {
         setOpenConfirmModal(false);
       }
     }
+  };
+
+  const handleView = (record: Documento) => {
+    setRecordToView(record);
+    setOpenPDFModal(true);
   };
 
   if (documentos.length === 0) {
@@ -127,10 +137,11 @@ export function MedicalReports({ documentos }: MedicalReportsProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center gap-1"
+                    className="flex items-center gap-1 border-green-200 text-green-700 hover:bg-green-50"
+                    onClick={() => handleView(report)}
                   >
-                    <Download className="h-4 w-4" />
-                    PDF
+                    <FileText className="h-4 w-4" />
+                    Visualizar PDF
                   </Button>
                   <Button
                     variant="outline"
@@ -150,6 +161,13 @@ export function MedicalReports({ documentos }: MedicalReportsProps) {
           </Card>
         ))}
       </div>
+
+      <PDFModalRLPR
+        open={openPDFModal}
+        onClose={() => setOpenPDFModal(false)}
+        paciente={paciente}
+        documentos={recordToView}
+      />
 
       <NewReportModal
         open={openModal}

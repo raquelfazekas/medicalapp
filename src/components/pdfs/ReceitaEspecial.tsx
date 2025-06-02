@@ -13,7 +13,7 @@ import {
 } from "@react-pdf/renderer";
 import { styles } from "./style";
 import { Paciente } from "@prisma/client";
-import { formatDateString } from "@/lib/formatters";
+import { formatDate } from "@/lib/formatters";
 
 const MyDocument = ({ paciente, dataEmissao, text, type }: PDF1Props) => (
   <Document>
@@ -33,7 +33,7 @@ const MyDocument = ({ paciente, dataEmissao, text, type }: PDF1Props) => (
           </Text>
           <Text style={{ marginBottom: 6 }}>
             <Text style={styles.label}>Data de Emissão: </Text>{" "}
-            {formatDateString(dataEmissao)}
+            {formatDate(dataEmissao)}
           </Text>
         </View>
         <View style={styles.row}>
