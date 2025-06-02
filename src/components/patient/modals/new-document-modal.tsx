@@ -103,7 +103,7 @@ export function NewDocumentModal({
               />
             </div>
 
-            <ReceitaEspecial paciente={pacitente} {...pdfProps} />
+            <ReceitaEspecial type="" paciente={pacitente} {...pdfProps} />
           </div>
         );
 
